@@ -10,12 +10,12 @@ const Container = styled.div`
   padding: 1rem;
   display: flex;
   align-items: center;
-  &:nth-child(even) {
+  /* &:nth-child(even) {
     background: #f8f9fa;
   }
   & + & {
     border-top: 1px solid #dee2e6;
-  }
+  } */
 `;
 
 const CheckBox = styled.div`
@@ -55,20 +55,32 @@ const Remove = styled.div`
   }
 `;
 
-const TodoListItem = ({ todo, onRemove, onToggle }) => {
+const ContainerVirtualized = styled.div`
+  & + & {
+    border-top: 1px solid #dee2e6;
+  }
+
+  &:nth-child(even) {
+    background: #f8f9fa;
+  }
+`;
+
+const TodoListItem = ({ todo, onRemove, onToggle, style }) => {
   const { id, text, checked } = todo;
 
   return (
-    <Container>
-      <CheckBox checked={checked} onClick={() => onToggle(id)}>
-        {checked ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
-        <div className="text">{text}</div>
-      </CheckBox>
-      <Remove onClick={() => onRemove(id)}>
-        <MdRemoveCircleOutline />
-      </Remove>
-    </Container>
+    <ContainerVirtualized style={style}>
+      <Container>
+        <CheckBox checked={checked} onClick={() => onToggle(id)}>
+          {checked ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
+          <div className="text">{text}</div>
+        </CheckBox>
+        <Remove onClick={() => onRemove(id)}>
+          <MdRemoveCircleOutline />
+        </Remove>
+      </Container>
+    </ContainerVirtualized>
   );
 };
 
-export default TodoListItem;
+export default React.memo(TodoListItem);
