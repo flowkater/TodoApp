@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { MdAdd } from "react-icons/md";
 import styled from "styled-components";
 
@@ -41,10 +41,32 @@ const Button = styled.button`
   }
 `;
 
-const TodoInsert = () => {
+const TodoInsert = ({ onInsert }) => {
+  const [value, setValue] = useState("");
+
+  const onChange = useCallback(e => {
+    setValue(e.target.value);
+  }, []);
+
+  const onSubmit = useCallback(
+    e => {
+      onInsert(value);
+      setValue(""); // value 값 초기화
+
+      // submit 이벤트는 브라우저에서 새로고침을 발생시킵니다.
+      // 이를 방지
+      e.preventDefault();
+    },
+    [onInsert, value]
+  );
+
   return (
-    <Container>
-      <Input placeholder="할 일을 입력하세요." />
+    <Container onSubmit={onSubmit}>
+      <Input
+        placeholder="할 일을 입력하세요."
+        value={value}
+        onChange={onChange}
+      />
       <Button type="submit">
         <MdAdd />
       </Button>
